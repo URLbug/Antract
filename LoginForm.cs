@@ -1,6 +1,4 @@
 ﻿using App.components;
-using System.Data;
-using System.Windows.Forms;
 
 namespace App
 {
@@ -22,7 +20,7 @@ namespace App
             {
                 Form main;
 
-                if(!db.IsAdmin(login))
+                if (!db.IsAdmin(login))
                     main = new MainForm();
                 else
                     main = new AdminForm();

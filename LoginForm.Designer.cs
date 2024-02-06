@@ -32,6 +32,8 @@
             loginBox = new TextBox();
             passBox = new TextBox();
             errorText = new Label();
+            label1 = new Label();
+            label2 = new Label();
             SuspendLayout();
             // 
             // loginButton
@@ -64,16 +66,38 @@
             errorText.AutoSize = true;
             errorText.BackColor = SystemColors.Control;
             errorText.ForeColor = Color.Red;
-            errorText.Location = new Point(111, 69);
+            errorText.Location = new Point(101, 53);
             errorText.Name = "errorText";
             errorText.Size = new Size(0, 15);
             errorText.TabIndex = 3;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 10F);
+            label1.Location = new Point(101, 80);
+            label1.Name = "label1";
+            label1.Size = new Size(47, 19);
+            label1.TabIndex = 4;
+            label1.Text = "Логин";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 10F);
+            label2.Location = new Point(101, 155);
+            label2.Name = "label2";
+            label2.Size = new Size(56, 19);
+            label2.TabIndex = 5;
+            label2.Text = "Пароль";
             // 
             // LoginForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(409, 356);
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(errorText);
             Controls.Add(passBox);
             Controls.Add(loginBox);
@@ -90,5 +114,7 @@
         private TextBox loginBox;
         private TextBox passBox;
         private Label errorText;
+        private Label label1;
+        private Label label2;
     }
 }

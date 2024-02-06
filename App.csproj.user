@@ -4,7 +4,16 @@
     <Compile Update="admins\AdminForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="admins\GivRoleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="admins\NewPassForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="admins\RegistForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="admins\RemoveUserForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="LoginForm.cs">
