@@ -1,5 +1,6 @@
-﻿using Npgsql;
-using System.Data;
+﻿using System.Data;
+
+using Npgsql;
 
 namespace App.components
 {
@@ -7,91 +8,19 @@ namespace App.components
     {
         private Config _config;
 
-        public NpgsqlConnection _conn;
+        private NpgsqlConnection _conn;
 
         public Database() 
         {
             _config = new Config();
 
             _conn = new NpgsqlConnection(_config.get_SetUp());
+        }
 
+        public int GetidRole(string role) 
+        {
             _conn.Open();
-        }
 
-        public bool IsAdmin(string login)
-        {
-            bool is_admin = false;
-
-            string commandText = $"SELECT roles_id FROM users WHERE login = '{login}';";
-
-            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
-            {
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                    {
-                        is_admin = reader[0].ToString() == "5";
-                    }
-            }
-
-            return is_admin;
-        }
-
-        public bool IsLogin(string login, string password) 
-        {
-            bool is_login = false;
-
-            string commandText = $"SELECT login FROM users WHERE login = '{login}' AND passwords = '{password}';";
-
-            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
-            {
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                    {
-                        is_login = reader[0].ToString() != "";
-                    }
-            }
-
-            return is_login;
-        }
-
-        public bool IsLoginIn(string login)
-        {
-            bool is_login = false;
-
-            string commandText = $"SELECT login FROM users WHERE login = '{login}';";
-
-            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
-            {
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                    {
-                        is_login = reader[0].ToString() != "";
-                    }
-            }
-
-            return is_login;
-        }
-
-        public List<string> Roles()
-        {
-            List<string> roles = new List<string>();
-
-            string commandText = $"SELECT * FROM roles;";
-
-            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
-            {
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                    {
-                        roles.Add(reader.GetString(reader.GetOrdinal("rols")));
-                    }
-            }
-
-            return roles;
-        }
-
-        public void RegistUser(string login, string role, string password, string last_name, string first_name)
-        {
             int role_id = 1;
 
             string commandText = $"SELECT id FROM roles WHERE rols = '{role}';";
@@ -105,7 +34,106 @@ namespace App.components
                     }
             }
 
-            commandText = $"INSERT INTO users (roles_id, login, first_name, last_name, passwords) VALUES ({role_id}, '{login}', '{first_name}', '{last_name}', '{password}');";
+            _conn.Close();
+
+            return role_id;
+        }
+
+        public bool IsAdmin(string login)
+        {
+            _conn.Open();
+
+            bool is_admin = false;
+
+            string commandText = $"SELECT roles_id FROM users WHERE login = '{login}';";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        is_admin = reader[0].ToString() == "5";
+                    }
+            }
+
+            _conn.Close();
+
+            return is_admin;
+        }
+
+        public bool IsLogin(string login, string password) 
+        {
+            _conn.Open();
+
+            bool is_login = false;
+
+            string commandText = $"SELECT login FROM users WHERE login = '{login}' AND passwords = md5('{password}');";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        is_login = reader[0].ToString() != "";
+                    }
+            }
+
+            _conn.Close();
+
+            return is_login;
+        }
+
+        public bool IsLoginIn(string login)
+        {
+            _conn.Open();
+
+            bool is_login = false;
+
+            string commandText = $"SELECT login FROM users WHERE login = '{login}';";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        is_login = reader[0].ToString() != "";
+                    }
+            }
+
+            _conn.Close();
+
+            return is_login;
+        }
+
+        public List<string> Roles()
+        {
+            _conn.Open();
+
+            List<string> roles = new List<string>();
+
+            string commandText = $"SELECT * FROM roles;";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        roles.Add(reader.GetString(reader.GetOrdinal("rols")));
+                    }
+            }
+
+            _conn.Close();
+
+            return roles;
+        }
+
+        public void RegistUser(string login, string role, string password, string last_name, string first_name)
+        {
+            int role_id = GetidRole(role);
+
+            _conn.Open();
+
+            string commandText = $"INSERT INTO users (roles_id, login, first_name, last_name, passwords) VALUES ({role_id}, '{login}', '{first_name}', '{last_name}', md5('{password}'));";
 
             using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
             {
@@ -115,6 +143,83 @@ namespace App.components
                 }
             }
 
+            _conn.Close();
+
+        }
+        
+        public void DropUser(string login) 
+        {
+            _conn.Open();
+
+            string commandText = $"DELETE FROM users WHERE login = '{login}';";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+
+                }
+            }
+
+            _conn.Close();
+        }
+        
+        public void UpdateRole(string login, string role)
+        {
+            int role_id = GetidRole(role);
+
+            _conn.Open();
+
+            string commandText = $"UPDATE users SET roles_id = {role_id} WHERE login = '{login}';";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+
+                }
+            }
+
+            _conn.Close();
+        } 
+    
+        public DataTable Table(string table)
+        {
+            DataTable dt = new DataTable();
+
+            _conn.Open();
+
+            string commandText = $"SELECT * FROM {table} LIMIT 20;";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        dt.Load(reader);
+                    }
+                    
+                    _conn.Close();
+
+                    return dt;
+                }
+            }
+        }
+        
+        public void NewPassword(string login, string password) 
+        {
+            _conn.Open();
+
+            string commandText = $"UPDATE users SET passwords = md5('{password}') WHERE login = '{login}';";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    
+                }
+            }
         }
     }
 }
