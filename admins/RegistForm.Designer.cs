@@ -39,13 +39,14 @@
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
+            ExitButton = new Button();
             SuspendLayout();
             // 
             // registButton
             // 
-            registButton.Location = new Point(61, 290);
+            registButton.Location = new Point(61, 281);
             registButton.Name = "registButton";
-            registButton.Size = new Size(213, 37);
+            registButton.Size = new Size(213, 33);
             registButton.TabIndex = 0;
             registButton.Text = "Зарегистрировать";
             registButton.UseVisualStyleBackColor = true;
@@ -138,11 +139,22 @@
             label4.TabIndex = 10;
             label4.Text = "Фамилия";
             // 
+            // ExitButton
+            // 
+            ExitButton.Location = new Point(61, 326);
+            ExitButton.Name = "ExitButton";
+            ExitButton.Size = new Size(213, 32);
+            ExitButton.TabIndex = 11;
+            ExitButton.Text = "Выйти";
+            ExitButton.UseVisualStyleBackColor = true;
+            ExitButton.Click += ExitButton_Click;
+            // 
             // RegistForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(335, 354);
+            ClientSize = new Size(335, 370);
+            Controls.Add(ExitButton);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -173,5 +185,6 @@
         private Label label2;
         private Label label3;
         private Label label4;
+        private Button ExitButton;
     }
 }

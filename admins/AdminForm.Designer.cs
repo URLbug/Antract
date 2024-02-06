@@ -32,7 +32,9 @@
             regisButton = new Button();
             deleteButton = new Button();
             getRoleButton = new Button();
-            dataPanel = new Panel();
+            newPassButton = new Button();
+            dataPanel = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dataPanel).BeginInit();
             SuspendLayout();
             // 
             // adminPanel
@@ -63,6 +65,7 @@
             deleteButton.TabIndex = 2;
             deleteButton.Text = "Удалить пользователя";
             deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.Click += deleteButton_Click;
             // 
             // getRoleButton
             // 
@@ -72,14 +75,25 @@
             getRoleButton.TabIndex = 3;
             getRoleButton.Text = "Дать новую роль";
             getRoleButton.UseVisualStyleBackColor = true;
+            getRoleButton.Click += getRoleButton_Click;
+            // 
+            // newPassButton
+            // 
+            newPassButton.Location = new Point(28, 243);
+            newPassButton.Name = "newPassButton";
+            newPassButton.Size = new Size(182, 34);
+            newPassButton.TabIndex = 5;
+            newPassButton.Text = "Новый пароль";
+            newPassButton.UseVisualStyleBackColor = true;
+            newPassButton.Click += newPassButton_Click;
             // 
             // dataPanel
             // 
-            dataPanel.BackColor = SystemColors.ControlDark;
+            dataPanel.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataPanel.Location = new Point(261, 12);
             dataPanel.Name = "dataPanel";
             dataPanel.Size = new Size(461, 326);
-            dataPanel.TabIndex = 4;
+            dataPanel.TabIndex = 6;
             // 
             // AdminForm
             // 
@@ -87,12 +101,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(734, 350);
             Controls.Add(dataPanel);
+            Controls.Add(newPassButton);
             Controls.Add(getRoleButton);
             Controls.Add(deleteButton);
             Controls.Add(regisButton);
             Controls.Add(adminPanel);
             Name = "AdminForm";
             Text = "AdminForm";
+            ((System.ComponentModel.ISupportInitialize)dataPanel).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -103,6 +119,7 @@
         private Button regisButton;
         private Button deleteButton;
         private Button getRoleButton;
-        private Panel dataPanel;
+        private Button newPassButton;
+        private DataGridView dataPanel;
     }
 }

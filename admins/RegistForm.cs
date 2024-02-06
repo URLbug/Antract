@@ -34,7 +34,7 @@ namespace App.admins
 
         private void registButton_Click(object sender, EventArgs e)
         {
-            bool is_reg = true; 
+            bool is_reg = true;
 
             string[] data = {
                 logBox.Text,
@@ -46,7 +46,7 @@ namespace App.admins
 
             for (int i = 0; i < data.Length; i++)
             {
-                if (data[i] == "" && db.IsLoginIn(data[0]))
+                if (data[i] == "" && db.IsLoginIn(data[0]) && _roles.Contains(data[1]))
                 {
                     MessageBox.Show(errorList[i]);
 
@@ -69,6 +69,15 @@ namespace App.admins
                 this.Hide();
             }
 
+        }
+
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            AdminForm admin = new AdminForm();
+
+            admin.Show();
+
+            this.Hide();
         }
     }
 }
