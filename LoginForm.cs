@@ -1,5 +1,6 @@
 ﻿using App.components;
 
+
 namespace App
 {
     public partial class LoginForm : Form
@@ -9,6 +10,7 @@ namespace App
         public LoginForm()
         {
             InitializeComponent();
+
         }
 
         private void loginButton_Click(object sender, EventArgs e)
