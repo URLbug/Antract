@@ -67,6 +67,7 @@
             interactionBox.Name = "interactionBox";
             interactionBox.Size = new Size(121, 23);
             interactionBox.TabIndex = 9;
+            interactionBox.SelectedIndexChanged += interactionBox_SelectedIndexChanged;
             // 
             // MainForm
             // 

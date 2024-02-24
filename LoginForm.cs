@@ -1,5 +1,5 @@
-﻿using App.components;
-
+﻿using App.components.database;
+using App.components.jsons;
 
 namespace App
 {
@@ -10,7 +10,6 @@ namespace App
         public LoginForm()
         {
             InitializeComponent();
-
         }
 
         private void loginButton_Click(object sender, EventArgs e)
@@ -20,12 +19,18 @@ namespace App
 
             if (db.IsLogin(login, password))
             {
-                Form main;
+                Form main = !db.IsAdmin(login) ? new MainForm() : new AdminForm();
+                int id = db.GetidUser(login);
 
-                if (!db.IsAdmin(login))
-                    main = new MainForm();
-                else
-                    main = new AdminForm();
+                UserSession data = new UserSession()
+                {
+                    Id = id,
+                    Username = login,
+                };
+
+                Sessions session = new Sessions();
+
+                session.JsonWrite(@"./user.json", data);
 
                 main.Show();
 

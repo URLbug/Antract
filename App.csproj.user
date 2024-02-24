@@ -4,19 +4,22 @@
     <Compile Update="admins\AdminForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="admins\GivRoleForm.cs">
+    <Compile Update="admins\func_form\GivRoleForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="admins\NewPassForm.cs">
+    <Compile Update="admins\func_form\NewPassForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="admins\RegistForm.cs">
+    <Compile Update="admins\func_form\RegistForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="admins\RemoveUserForm.cs">
+    <Compile Update="admins\func_form\RemoveUserForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="users\func_form\ReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="users\MainForm.cs">

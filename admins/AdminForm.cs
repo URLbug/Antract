@@ -1,6 +1,5 @@
 ﻿using App.admins;
-using App.components;
-
+using App.components.database;
 using System.Data;
 
 namespace App
