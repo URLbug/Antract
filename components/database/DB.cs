@@ -1,8 +1,7 @@
 ﻿using System.Data;
-
 using Npgsql;
 
-namespace App.components
+namespace App.components.database
 {
     public class Database
     {
@@ -10,14 +9,60 @@ namespace App.components
 
         private NpgsqlConnection _conn;
 
-        public Database() 
+        public Database()
         {
             _config = new Config();
 
             _conn = new NpgsqlConnection(_config.get_SetUp());
         }
 
-        public int GetidRole(string role) 
+        public DataTable Table(string table)
+        {
+            DataTable dt = new DataTable();
+
+            _conn.Open();
+
+            string commandText = $"SELECT * FROM {table} LIMIT 20;";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        dt.Load(reader);
+                    }
+
+                    _conn.Close();
+
+                    return dt;
+                }
+            }
+        }
+
+        public List<string> Roles()
+        {
+            _conn.Open();
+
+            List<string> roles = new List<string>();
+
+            string commandText = $"SELECT * FROM roles;";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        roles.Add(reader.GetString(reader.GetOrdinal("rols")));
+                    }
+            }
+
+            _conn.Close();
+
+            return roles;
+        }
+
+        public int GetidRole(string role)
         {
             _conn.Open();
 
@@ -37,6 +82,28 @@ namespace App.components
             _conn.Close();
 
             return role_id;
+        }
+
+        public int GetidUser(string login)
+        {
+            _conn.Open();
+
+            int user_id = 1;
+
+            string commandText = $"SELECT id FROM users WHERE login = '{login}';";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        user_id = int.Parse(reader[0].ToString());
+                    }
+            }
+
+            _conn.Close();
+
+            return user_id;
         }
 
         public bool IsAdmin(string login)
@@ -61,7 +128,7 @@ namespace App.components
             return is_admin;
         }
 
-        public bool IsLogin(string login, string password) 
+        public bool IsLogin(string login, string password)
         {
             _conn.Open();
 
@@ -105,28 +172,6 @@ namespace App.components
             return is_login;
         }
 
-        public List<string> Roles()
-        {
-            _conn.Open();
-
-            List<string> roles = new List<string>();
-
-            string commandText = $"SELECT * FROM roles;";
-
-            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
-            {
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                    {
-                        roles.Add(reader.GetString(reader.GetOrdinal("rols")));
-                    }
-            }
-
-            _conn.Close();
-
-            return roles;
-        }
-
         public void RegistUser(string login, string role, string password, string last_name, string first_name)
         {
             int role_id = GetidRole(role);
@@ -146,8 +191,8 @@ namespace App.components
             _conn.Close();
 
         }
-        
-        public void DropUser(string login) 
+
+        public void DropUser(string login)
         {
             _conn.Open();
 
@@ -163,7 +208,7 @@ namespace App.components
 
             _conn.Close();
         }
-        
+
         public void UpdateRole(string login, string role)
         {
             int role_id = GetidRole(role);
@@ -181,33 +226,9 @@ namespace App.components
             }
 
             _conn.Close();
-        } 
-    
-        public DataTable Table(string table)
-        {
-            DataTable dt = new DataTable();
-
-            _conn.Open();
-
-            string commandText = $"SELECT * FROM {table} LIMIT 20;";
-
-            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
-            {
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        dt.Load(reader);
-                    }
-                    
-                    _conn.Close();
-
-                    return dt;
-                }
-            }
         }
-        
-        public void NewPassword(string login, string password) 
+
+        public void NewPassword(string login, string password)
         {
             _conn.Open();
 
@@ -217,9 +238,43 @@ namespace App.components
             {
                 using (NpgsqlDataReader reader = cmd.ExecuteReader())
                 {
-                    
+
                 }
             }
+        }
+
+        public void Add(string table, string value)
+        {
+            _conn.Open();
+
+            List<string> values = new List<string>();
+
+            string commandText = $"SELECT column_name FROM information_schema.columns WHERE table_name = '{table}' AND column_name != 'id';";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        values.Add(reader.GetString(reader.GetOrdinal("column_name")));
+                    }
+                }
+            }
+
+            string param = string.Join(", ", values.ToArray());
+
+            commandText = $"INSERT INTO {table} ({param}) VALUES {value};";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(commandText, _conn))
+            {
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+
+                }
+            }
+
+            _conn.Close();
         }
     }
 }
